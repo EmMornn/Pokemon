@@ -4,14 +4,27 @@
 #include <ctime>
 // Importante recordar que para que funcione el archivo donde construi el pokemon no debe tener al final el .cpp
 
+int mostrarMenu();
+
 using namespace std;
 
 int main() {
-    
+
+    srand(time(0));
+
+int victorias = 0; // Iniciamos las victorias en 0 pero despues aumentan
+bool playerVivo = true; // Esto nos sirve para cuando estemos en el bucle de batalla y perdamos, cambiara a falso y termina el bucle
+int pociones = 15; // Tambien tenemos cura y declaramos que inicialmente empiezan con 15, o podemos cambiarlo luego
+int opbattle; // esto va a ser para atacar o curarse
+int opMenu;
     
     Pokemon torchic("Torchic", "Fuego", 60, 17, 10, 15);
     Pokemon treecko("Treecko", "Planta", 60, 14, 12, 20);
     Pokemon mudkip("Mudkip", "Agua", 65, 15, 15, 10);
+
+    Pokemon miPokemon = torchic; 
+    // Supuestamente debemos declarar o generar un pokemon por defecto pero 
+    //esto no importa porque despues el jugador lo elige ya en la aventura
 
 Pokemon catalogoEnemigos[10] = {
     Pokemon("Wurmple", "Bicho", 35, 8, 5, 10),
@@ -36,5 +49,64 @@ Pokemon catalogoEnemigos[10] = {
     cout << "Recluta 2 listo: " << treecko.nombre << " (Atk: " << treecko.ataque << ")" << " (Def: " << treecko.defensa << ")" << " (Ps: " << treecko.vidaMax << ")"  << endl;
     cout << "Recluta 3 listo: " << mudkip.nombre << " (Atk: " << mudkip.ataque << ")" << " (Def: " << mudkip.defensa << ")" << " (Ps: " << mudkip.vidaMax << ")"  << endl;
 */
+
+do
+{
+    opMenu = mostrarMenu();
+
+    switch (opMenu)
+    {
+    case 1:
+        cout << endl;
+        cout << "Empezando la Aventura...";
+        cout << endl;
+
+        break;
+    case 2:
+        cout << endl;
+        cout << "Tu historial de victorias en esta sesion es: " << victorias << endl << endl;
+        break;
+    case 3:
+        cout << endl;
+        cout << "Juego creado por:  " << endl;
+        cout << " Emiliano Moran " << endl;
+        cout << " Isai... " << endl;
+        cout << " Josue De Paz " << endl;
+        cout << " Amilcar... " << endl << endl;
+        cout << " Agradecimientos especiales a... " << endl;
+        cout << endl;
+        break;
+    case 4:
+        cout << endl;
+        cout << "Cerrando el juego..." << endl << endl;
+        break;
+    default:
+        cout << endl;
+        cout << "Opcion no reconocida, vuelva a intentarlo" << endl << endl;
+        break;
+    }
+} while (opMenu != 4);
+
+
     return 0;
+}
+
+int mostrarMenu(){
+int seleccion;
+cout << endl;
+cout << "======================================================" << endl;
+cout << "                AVENTURA POKEMON FDP C1               " << endl;
+cout << "======================================================" << endl;
+cout << endl;
+cout << "1. JUGAR" << endl;
+cout << "2. HISTORIAL DE VICTORIAS" << endl;
+cout << "3. CREDITOS Y AGRADECIMIENTOS"<< endl;
+cout << "4. SALIR " << endl;
+cout << " Selecciona una opcion: ";
+
+cin >> seleccion;
+return seleccion;
+
+
+
 }
