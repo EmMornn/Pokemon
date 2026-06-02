@@ -106,9 +106,9 @@ while (jugadorVivo == true && victorias < 10) {
     jugadorVivo = false; }
     }  
     if (jugadorVivo == true && victorias == 10) {
-        cout << "================================================" << endl;
-        cout << "          EL LIDER NOSEPASS TE DESAFIA          " << endl;
-        cout << "================================================" << endl;
+        cout << "=========================================================" << endl;
+        cout << "              EL LIDER NOSEPASS TE DESAFIA               " << endl;
+        cout << "=========================================================" << endl;
         
         ejecutarBatalla(miPokemon, liderNosepass, pociones);
         
@@ -157,9 +157,9 @@ while (jugadorVivo == true && victorias < 10) {
 int mostrarMenu(){
 int seleccion;
 cout << endl;
-cout << "======================================================" << endl;
-cout << "                AVENTURA POKEMON FDP C1               " << endl;
-cout << "======================================================" << endl;
+cout << "===============================================================" << endl;
+cout << "                    AVENTURA POKEMON FDP C1                    " << endl;
+cout << "===============================================================" << endl;
 cout << endl;
 cout << "1. JUGAR" << endl;
 cout << "2. HISTORIAL DE VICTORIAS" << endl;
@@ -173,9 +173,9 @@ return seleccion;
 
 // --- EL ENGRANAJE MENOR (LA BATALLA) ---
 void ejecutarBatalla(Pokemon &jugador, Pokemon &enemigo, int &pociones) {
-    cout << "\n=====================================" << endl;
+    cout << "\n==========================================" << endl;
     cout << "Comienza la pelea contra " << enemigo.nombre << "!" << endl;
-    cout << "=====================================\n" << endl;
+    cout << "===========================================\n" << endl;
 
     // 1. Usamos vidaActual para verificar si ambos siguen vivos
     while (jugador.vidaActual > 0 && enemigo.vidaActual > 0) {
@@ -211,29 +211,33 @@ void ejecutarBatalla(Pokemon &jugador, Pokemon &enemigo, int &pociones) {
                     int danio = jugador.ataque - (enemigo.defensa / 2);
                     if (danio < 1) danio = 1;
                     enemigo.vidaActual -= danio;
-                    cout << "-> ¡" << jugador.nombre << " usa Aranazo y causa " << danio << " de danio!" << endl;
+                    cout << "-> " << jugador.nombre << " usa Aranazo y causa " << danio << " de danio!" << endl;
                 } else if (mov == 2) {
                     int danio = (jugador.ataque + 5) - (enemigo.defensa / 2);
                     if (danio < 1) danio = 1;
                     enemigo.vidaActual -= danio;
-                    cout << "-> ¡" << jugador.nombre << " usa su Ataque Especial y causa " << danio << " de danio!" << endl;
+                    cout << "-> " << jugador.nombre << " usa su Ataque Especial y causa " << danio << " de danio!" << endl;
                 } else if (mov == 3) {
                     enemigo.defensa -= 2;
                     if (enemigo.defensa < 1) enemigo.defensa = 1;
-                    cout << "-> ¡" << jugador.nombre << " usa Grunido! La defensa del rival ha bajado." << endl;
+                    cout << "-> " << jugador.nombre << " usa Grunido! La defensa del rival ha bajado." << endl;
                 } else if (mov == 4) {
                     jugador.ataque += 3;
-                    cout << "-> ¡" << jugador.nombre << " usa Afilagarras! Su ataque ha subido." << endl;
+                    cout << "-> " << jugador.nombre << " usa Afilagarras! Su ataque ha subido." << endl;
+                }
+                else if (mov == 4) {
+                    jugador.ataque += 3;
+                    cout << "-> " << jugador.nombre << " usa Afilagarras! Su ataque ha subido." << endl;
                 }
             } else {
                 // Eligió curarse
                 if (pociones > 0) {
-                    jugador.vidaActual += 10;
+                    jugador.vidaActual += 20;
                     pociones--;
                     if (jugador.vidaActual > jugador.vidaMax) jugador.vidaActual = jugador.vidaMax;
-                    cout << "-> ¡Has usado una pocion! Recuperas 10 PS. Te quedan " << pociones << " pociones." << endl;
+                    cout << "-> Has usado una pocion! Recuperas 20 PS. Te quedan " << pociones << " pociones." << endl;
                 } else {
-                    cout << "-> ¡Oh no! No te quedan pociones. Pierdes el turno buscando en la mochila vacia..." << endl;
+                    cout << "-> Oh no! No te quedan pociones. Pierdes el turno buscando en la mochila vacia..." << endl;
                 }
             }
 
