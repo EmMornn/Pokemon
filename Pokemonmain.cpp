@@ -5,6 +5,7 @@
 // Importante recordar que para que funcione el archivo donde construi el pokemon no debe tener al final el .cpp
 
 int mostrarMenu();
+void ejecutarBatalla(Pokemon &jugador, Pokemon &enemigo, int &pociones);
 
 using namespace std;
 
@@ -13,7 +14,7 @@ int main() {
     srand(time(0));
 
 int victorias = 0; // Iniciamos las victorias en 0 pero despues aumentan
-bool playerVivo = true; // Esto nos sirve para cuando estemos en el bucle de batalla y perdamos, cambiara a falso y termina el bucle
+bool jugadorVivo = true; // Esto nos sirve para cuando estemos en el bucle de batalla y perdamos, cambiara a falso y termina el bucle
 int pociones = 15; // Tambien tenemos cura y declaramos que inicialmente empiezan con 15, o podemos cambiarlo luego
 int opbattle; // esto va a ser para atacar o curarse
 int opMenu;
@@ -39,7 +40,7 @@ Pokemon catalogoEnemigos[10] = {
     Pokemon("Makuhita", "Lucha", 80, 16, 15, 10)
     };
 
-    Pokemon liderNosepass("Nosepass", "Roca", 150, 25, 30, 10);
+    Pokemon liderNosepass("Nosepass", "Roca", 200, 40, 50, 35);
 
     /* Esto es para comprobar que los datos sean correctos, el pokemon.nombre esta declarado 
     en pokemon.h en la parte de abajo que dice nombre = _nombre por eso lo dejare comentado, 
@@ -59,7 +60,69 @@ do
     case 1:
         cout << endl;
         cout << "Empezando la Aventura...";
-        cout << endl;
+
+    int seleccionInicial;
+
+    cout << "El profesor Guayaba te ofrece a tu companero de Aventura!" << endl;
+    cout << "Selecciona uno de los pokemon iniciales. A quien eliges?: " << endl;
+    cout << "1. Treeko (Planta)" << endl;
+    cout << "2. Mudkip (Agua)" << endl;
+    cout << "3. Torchic (Fuego)" << endl; // La verdad esta es la mejor eleccion de las 3. Atte: Emiliano
+    cout << "Pokemon: ";
+    cin >> seleccionInicial;
+    cout << endl;
+
+    if (seleccionInicial == 1) miPokemon = treecko;
+    else if (seleccionInicial == 2) miPokemon = mudkip;
+    else if (seleccionInicial == 3) miPokemon = torchic;
+    else{ cout << "Opcion invalida. El Profesor te da a el vegano por defecto." << endl;
+        miPokemon = treecko;}
+    cout << "Has elegido a " << miPokemon.nombre << "!" << endl;
+    cout << "Que comience tu aventura!" << endl << endl;
+
+
+
+cout << "Derrota a tus oponentes para enfrentar al lider de Gimnasio" << endl;
+cout << "Buena suerte!" << endl; 
+
+while (jugadorVivo == true && victorias < 10) {
+                
+    int indiceAleatorio = rand() % 10; // Generamos un enemigo
+    Pokemon rivalActual = catalogoEnemigos[indiceAleatorio];
+                
+    rivalActual.escalarStats(victorias); // Aumentamos stats por cada combate
+
+    ejecutarBatalla(miPokemon, rivalActual, pociones); // Empieza la batalla
+                
+    if (miPokemon.vidaActual > 0) { // d) Al terminar la batalla, evaluamos qué pasó:
+                    
+    victorias++; // Si sigues vivo, ganaste esta ronda
+    miPokemon.subirNivel(); // Tu Pokémon se vuelve más fuerte
+    cout << "[ Progreso: " << victorias << " / 10 victorias ]" << endl;
+                    
+    system("pause"); // Pausa para que el jugador pueda respirar antes de la siguiente pelea
+
+    } else { // Si tu vida bajó a 0, perdiste
+    jugadorVivo = false; }
+    }  
+    if (jugadorVivo == true && victorias == 10) {
+        cout << "================================================" << endl;
+        cout << "          EL LIDER NOSEPASS TE DESAFIA          " << endl;
+        cout << "================================================" << endl;
+        
+        ejecutarBatalla(miPokemon, liderNosepass, pociones);
+        
+        if (miPokemon.vidaActual > 0) {
+            cout << "\n¡FELICIDADES! ¡HAS GANADO EL JUEGO!\n" << endl;
+        }
+    }
+
+    // Reiniciamos todo por si quieres volver a darle "1. Jugar" en el menú
+    victorias = 0;
+    jugadorVivo = true;
+    pociones = 15;      
+
+     cout << endl;
 
         break;
     case 2:
@@ -70,9 +133,9 @@ do
         cout << endl;
         cout << "Juego creado por:  " << endl;
         cout << " Emiliano Moran " << endl;
-        cout << " Isai... " << endl;
+        cout << " Isai Umana " << endl;
         cout << " Josue De Paz " << endl;
-        cout << " Amilcar... " << endl << endl;
+        cout << " El otro " << endl << endl;
         cout << " Agradecimientos especiales a... " << endl;
         cout << endl;
         break;
@@ -106,7 +169,144 @@ cout << " Selecciona una opcion: ";
 
 cin >> seleccion;
 return seleccion;
+}
 
+// --- EL ENGRANAJE MENOR (LA BATALLA) ---
+void ejecutarBatalla(Pokemon &jugador, Pokemon &enemigo, int &pociones) {
+    cout << "\n=====================================" << endl;
+    cout << "Comienza la pelea contra " << enemigo.nombre << "!" << endl;
+    cout << "=====================================\n" << endl;
 
+    // 1. Usamos vidaActual para verificar si ambos siguen vivos
+    while (jugador.vidaActual > 0 && enemigo.vidaActual > 0) {
+        
+        bool jugadorVaPrimero = true;
 
+        // 2. Evaluamos usando tu variable 'velocidad'
+        if (enemigo.velocidad > jugador.velocidad) {
+            jugadorVaPrimero = false;
+        }
+
+        if (jugadorVaPrimero) {
+            // --- TURNO 1: JUGADOR ---
+            int accion;
+            cout << "\n[ PS " << jugador.nombre << ": " << jugador.vidaActual << " | PS " << enemigo.nombre << ": " << enemigo.vidaActual << " ]";
+            cout << "\nTu turno. 1. Atacar | 2. Usar Pocion (" << pociones << " restantes): ";
+            cin >> accion;
+            
+            if (accion == 1) {
+                // Eligió atacar, abrimos submenú
+                int mov;
+                cout << "\n--- MOVIMIENTOS ---" << endl;
+                cout << "1. Aranazo (Danio normal)" << endl;
+                if (jugador.tipo == "Fuego") cout << "2. Ascuas (Ataque Especial)" << endl;
+                else if (jugador.tipo == "Agua") cout << "2. Pistola Agua (Ataque Especial)" << endl;
+                else cout << "2. Hoja Afilada (Ataque Especial)" << endl;
+                cout << "3. Grunido (Bajar Defensa rival)" << endl;
+                cout << "4. Afilagarras (Subir tu Ataque)" << endl;
+                cout << "Elige un movimiento (1-4): ";
+                cin >> mov;
+
+                if (mov == 1) {
+                    int danio = jugador.ataque - (enemigo.defensa / 2);
+                    if (danio < 1) danio = 1;
+                    enemigo.vidaActual -= danio;
+                    cout << "-> ¡" << jugador.nombre << " usa Aranazo y causa " << danio << " de danio!" << endl;
+                } else if (mov == 2) {
+                    int danio = (jugador.ataque + 5) - (enemigo.defensa / 2);
+                    if (danio < 1) danio = 1;
+                    enemigo.vidaActual -= danio;
+                    cout << "-> ¡" << jugador.nombre << " usa su Ataque Especial y causa " << danio << " de danio!" << endl;
+                } else if (mov == 3) {
+                    enemigo.defensa -= 2;
+                    if (enemigo.defensa < 1) enemigo.defensa = 1;
+                    cout << "-> ¡" << jugador.nombre << " usa Grunido! La defensa del rival ha bajado." << endl;
+                } else if (mov == 4) {
+                    jugador.ataque += 3;
+                    cout << "-> ¡" << jugador.nombre << " usa Afilagarras! Su ataque ha subido." << endl;
+                }
+            } else {
+                // Eligió curarse
+                if (pociones > 0) {
+                    jugador.vidaActual += 10;
+                    pociones--;
+                    if (jugador.vidaActual > jugador.vidaMax) jugador.vidaActual = jugador.vidaMax;
+                    cout << "-> ¡Has usado una pocion! Recuperas 10 PS. Te quedan " << pociones << " pociones." << endl;
+                } else {
+                    cout << "-> ¡Oh no! No te quedan pociones. Pierdes el turno buscando en la mochila vacia..." << endl;
+                }
+            }
+
+            if (enemigo.vidaActual <= 0) break;
+
+            // --- TURNO 2: ENEMIGO ---
+            int danioEnemigo = enemigo.ataque - (jugador.defensa / 2);
+            if (danioEnemigo < 1) danioEnemigo = 1;
+            jugador.vidaActual -= danioEnemigo;
+            cout << "-> ¡" << enemigo.nombre << " contraataca y causa " << danioEnemigo << " de danio!\n" << endl;
+
+        } else {
+            // --- TURNO 1: ENEMIGO (Es más rápido) ---
+            int danioEnemigo = enemigo.ataque - (jugador.defensa / 2);
+            if (danioEnemigo < 1) danioEnemigo = 1;
+            jugador.vidaActual -= danioEnemigo;
+            cout << "\n-> ¡" << enemigo.nombre << " es mas rapido y ataca! Causa " << danioEnemigo << " de danio." << endl;
+
+            if (jugador.vidaActual <= 0) break;
+
+            // --- TURNO 2: JUGADOR ---
+            int accion;
+            cout << "\n[ PS " << jugador.nombre << ": " << jugador.vidaActual << " | PS " << enemigo.nombre << ": " << enemigo.vidaActual << " ]";
+            cout << "\nTu turno. 1. Atacar | 2. Usar Pocion (" << pociones << " restantes): ";
+            cin >> accion;
+            
+            if (accion == 1) {
+                int mov; // Este es el movepool de los pokemon, 
+                            // en si los por defecto son aranazo, y los 2 de stats, y dependiendo el inicial el at. esp
+                cout << "\n--- MOVIMIENTOS ---" << endl;
+                cout << "1. Aranazo (Danio normal)" << endl;
+                if (jugador.tipo == "Fuego") cout << "2. Ascuas (Ataque Especial)" << endl;
+                else if (jugador.tipo == "Agua") cout << "2. Pistola Agua (Ataque Especial)" << endl;
+                else cout << "2. Hoja Afilada (Ataque Especial)" << endl;
+                cout << "3. Grunido (Bajar Defensa rival)" << endl;
+                cout << "4. Afilagarras (Subir tu Ataque)" << endl;
+                cout << "Elige un movimiento (1-4): ";
+                cin >> mov;
+
+                if (mov == 1) {
+                    int danio = jugador.ataque - (enemigo.defensa / 2);
+                    if (danio < 1) danio = 1;
+                    enemigo.vidaActual -= danio;
+                    cout << "-> ¡" << jugador.nombre << " usa Aranazo y causa " << danio << " de danio!" << endl;
+                } else if (mov == 2) {
+                    int danio = (jugador.ataque + 5) - (enemigo.defensa / 2);
+                    if (danio < 1) danio = 1;
+                    enemigo.vidaActual -= danio;
+                    cout << "-> ¡" << jugador.nombre << " usa su Ataque Especial y causa " << danio << " de danio!" << endl;
+                } else if (mov == 3) {
+                    enemigo.defensa -= 2;
+                    if (enemigo.defensa < 1) enemigo.defensa = 1;
+                    cout << "-> ¡" << jugador.nombre << " usa Grunido! La defensa del rival ha bajado." << endl;
+                } else if (mov == 4) {
+                    jugador.ataque += 3;
+                    cout << "-> ¡" << jugador.nombre << " usa Afilagarras! Su ataque ha subido." << endl;
+                }
+            } else {
+                if (pociones > 0) {
+                    jugador.vidaActual += 10;
+                    pociones--;
+                    if (jugador.vidaActual > jugador.vidaMax) jugador.vidaActual = jugador.vidaMax;
+                    cout << "-> ¡Has usado una pocion! Recuperas 10 PS. Te quedan " << pociones << " pociones." << endl;
+                } else {
+                    cout << "-> ¡Oh no! No te quedan pociones. Pierdes el turno buscando en la mochila vacia..." << endl;
+                }
+            }
+        }
+    }
+
+    if (jugador.vidaActual <= 0) {
+        cout << "\n¡Has perdido la batalla...\n";
+    } else {
+        cout << "\n¡Has ganado la batalla!\n";
+    }
 }

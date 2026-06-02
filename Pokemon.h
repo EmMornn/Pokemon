@@ -25,16 +25,16 @@ public:
        
     }
      void subirNivel() {
-        vidaMax += 10;
+        vidaMax += 9;
         vidaActual = vidaMax;
-        ataque += 3;
-        defensa += 2;
+        ataque += 2;
+        defensa += 3;
         cout << nombre << " ha subido de nivel!." << endl;
 }; 
 
         void escalarStats(int victorias) {
-        vidaMax += (victorias * 5); 
+        vidaMax += (victorias * 7); 
         vidaActual = vidaMax;
-        ataque += (victorias * 2);  
+        ataque += (victorias * 4);  
     };
 };
