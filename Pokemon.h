@@ -1,9 +1,7 @@
-#include <iostream>
 #include <string>
 
 using namespace std;
-class Pokemon {
-public:
+struct Pokemon {
     string nombre;
     string tipo;
     int vidaMax;
@@ -11,9 +9,9 @@ public:
     int ataque;
     int defensa;
     int velocidad;
-
+};
    
-    Pokemon(string _nombre, string _tipo, int _vida, int _ataque, int _defensa, int _velocidad) {
+    /*Pokemon(string _nombre, string _tipo, int _vida, int _ataque, int _defensa, int _velocidad) {
         nombre = _nombre;
         tipo = _tipo;
         vidaMax = _vida;
@@ -21,9 +19,8 @@ public:
         ataque = _ataque;
         defensa = _defensa;
         velocidad = _velocidad;
-
-       
     }
+
      void subirNivel() {
         vidaMax += 9;
         vidaActual = vidaMax;
@@ -37,4 +34,4 @@ public:
         vidaActual = vidaMax;
         ataque += (victorias * 4);  
     };
-};
+};  */
