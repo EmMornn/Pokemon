@@ -30,6 +30,8 @@ int main() {
 
     srand(time(0));
 
+int victoriastotales = 0;
+
 int victorias = 0; // Iniciamos las victorias en 0 pero despues aumentan
 bool jugadorVivo = true; // Esto nos sirve para cuando estemos en el bucle de batalla y perdamos, cambiara a falso y termina el bucle
 int pociones = 15; // Tambien tenemos cura y declaramos que inicialmente empiezan con 15, o podemos cambiarlo luego
@@ -75,6 +77,11 @@ do
     switch (opMenu)
     {
     case 1:
+// Reiniciamos todo por si quieres volver a darle "1. Jugar" en el menú
+    victorias = 0;
+    jugadorVivo = true;
+    pociones = 15; 
+
         cout << endl;
         cout << "Empezando la Aventura..." << endl;
 
@@ -114,6 +121,7 @@ while (jugadorVivo == true && victorias < 10) {
     if (miPokemon.vidaActual > 0) { // Al terminar la batalla, evaluamos qué pasa:
                     
     victorias++; // Si sigues vivo, ganaste esta ronda
+    victoriastotales++;
     subirNivel(miPokemon); // Nuestro Pokémon se vuelve más fuerte
     cout << "[ Progreso: " << victorias << " / 10 victorias ]" << endl;
                     
@@ -134,19 +142,19 @@ while (jugadorVivo == true && victorias < 10) {
         if (miPokemon.vidaActual > 0) {
             cout << "\n¡FELICIDADES! ¡HAS GANADO EL JUEGO!\n" << endl;
         }
-    }
-
-    // Reiniciamos todo por si quieres volver a darle "1. Jugar" en el menú
-    victorias = 0;
-    jugadorVivo = true;
-    pociones = 15;      
+    }     
 
      cout << endl;
 
         break;
-    case 2:
+   case 2:
         cout << endl;
-        cout << "Tu historial de victorias en esta sesion es: " << victorias << endl << endl;
+        cout << "=============================================================" << endl;
+        cout << "                ESTADISTICAS DE LA SESION                " << endl;
+        cout << "=============================================================" << endl << endl;
+        cout << " Victorias en la ultima partida: " << victorias << endl;
+        cout << " Total de victorias acumuladas:  " << victoriastotales << endl;
+        cout << "=============================================================\n" << endl;
         break;
     case 3:
         cout << endl;
