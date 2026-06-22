@@ -25,7 +25,7 @@ void escalarStats(Pokemon &p, int victorias)
 };
 
 int mostrarMenu();
-void ejecutarBatalla(Pokemon &jugador, Pokemon &enemigo, int &pociones);
+void ejecutarBatalla(Pokemon &jugador, Pokemon &enemigo, int &pociones, int &superPociones);
 
 void textoAnimado(string texto, int velocidad)
 {
@@ -58,6 +58,7 @@ int main()
     int victorias = 0;       // Iniciamos las victorias en 0 pero despues aumentan
     bool jugadorVivo = true; // Esto nos sirve para cuando estemos en el bucle de batalla y perdamos, cambiara a falso y termina el bucle
     int pociones = 15;       // Tambien tenemos cura y declaramos que inicialmente empiezan con 15, o podemos cambiarlo luego
+    int superPociones = 5;
 
     int opbattle; // esto va a ser para atacar o curarse
     int opMenu;
@@ -81,32 +82,41 @@ int main()
     // esto no importa porque despues el jugador lo elige ya en la aventura
 
     Pokemon catalogoEnemigos[20] = {
+        // TIER 1: (ENCUENTROS INICIALES)
         {"Wurmple", "Bicho", 35, 35, 8, 5, 10},
-        {"Poochyena", "Siniestro", 40, 40, 12, 8, 15},
-        {"Zigzagoon", "Normal", 45, 45, 10, 10, 18},
-        {"Taillow", "Volador", 45, 45, 15, 8, 25},
-        {"Wingull", "Agua", 50, 50, 12, 10, 20},
-        {"Ralts", "Psiquico", 40, 40, 18, 5, 15},
-        {"Shroomish", "Planta", 60, 60, 12, 15, 8},
-        {"Whismur", "Normal", 65, 65, 14, 10, 10},
-        {"Slakoth", "Normal", 70, 70, 18, 15, 5},
-        {"Makuhita", "Lucha", 80, 80, 14, 15, 10},
-        {"Aron", "Acero", 50, 50, 15, 22, 8},
-        {"Electrike", "Electrico", 45, 45, 14, 10, 22},
+        {"Azurill", "Normal", 50, 50, 9, 10, 11},
         {"Lotad", "Agua", 45, 45, 10, 11, 12},
         {"Seedot", "Planta", 45, 45, 11, 14, 10},
+
+        // TIER 2: (VELOCIDAD Y ESTADO)
+        {"Poochyena", "Siniestro", 40, 40, 12, 8, 15},
         {"Surskit", "Agua", 45, 45, 11, 9, 20},
+        {"Zigzagoon", "Normal", 45, 45, 10, 10, 18},
         {"Nincada", "Bicho", 40, 40, 13, 18, 12},
+
+        // TIER 3: (PELIGRO DE DAÑO REAL)
+        {"Zubat", "Volador", 45, 45, 14, 10, 24},
+        {"Ralts", "Psiquico", 40, 40, 19, 5, 16},
+        {"Electrike", "Electrico", 45, 45, 15, 11, 25},
+        {"Wingull", "Agua", 50, 50, 12, 10, 20},
+
+        // --- TIER 4: (PESOS MEDIOS)
         {"Goldeen", "Agua", 50, 50, 14, 12, 16},
-        {"Azurill", "Normal", 50, 50, 8, 10, 9},
         {"Skitty", "Normal", 55, 55, 11, 11, 18},
-        {"Zubat", "Volador", 45, 45, 12, 9, 21}};
+        {"Whismur", "Normal", 65, 65, 14, 10, 10},
+        {"Taillow", "Volador", 45, 45, 18, 8, 26},
 
-    Pokemon liderNosepass{"Nosepass", "Roca", 150, 150, 40, 40, 30};
+        // TIER 5: (PRE-JEFE)
+        {"Shroomish", "Planta", 60, 60, 12, 15, 8},
+        {"Aron", "Acero", 70, 70, 17, 26, 9},
+        {"Slakoth", "Normal", 70, 70, 22, 16, 6},
+        {"Makuhita", "Lucha", 80, 80, 16, 16, 11}};
 
-    /* Esto es para comprobar que los datos sean correctos, el pokemon.nombre esta declarado
-    en pokemon.h en la parte de abajo que dice nombre = _nombre por eso lo dejare comentado,
-    si quieren probarlo solo quiten el asterico y la pleca.
+    Pokemon liderNosepass{"Nosepass", "Roca", 150, 150, 33, 35, 30};
+    // Proximo a ampliar para ser mas variada y emocionante la aventura (piensen ideas porfa)
+
+    /* Esto es para comprobar que los datos sean correctos, el pokemon.nombre esta declaradoen pokemon.h en la parte
+     de abajo que dice nombre = _nombre por eso lo dejare comentado, si quieren probarlo solo quiten el asterico y la pleca.
     cout << "Sistemas en linea." << endl;
     cout << "Recluta 1 listo: " << torchic.nombre << " (Atk: " << torchic.ataque << ")" << " (Def: " << torchic.defensa << ")" << " (Ps: " << torchic.vidaMax << ")"  << endl;
     cout << "Recluta 2 listo: " << treecko.nombre << " (Atk: " << treecko.ataque << ")" << " (Def: " << treecko.defensa << ")" << " (Ps: " << treecko.vidaMax << ")"  << endl;
@@ -124,8 +134,9 @@ int main()
             victorias = 0;
             jugadorVivo = true;
             pociones = 15;
+            superPociones = 5;
 
-            liderNosepass = {"Nosepass", "Roca", 150, 150, 40, 40, 30}; // Reseteamos al jefe ya que las estadisticas ya habian aumentado en el
+            liderNosepass = {"Nosepass", "Roca", 150, 150, 33, 35, 30}; // Reseteamos al jefe ya que las estadisticas ya habian aumentado en el
 
             std::system("cls");
 
@@ -179,12 +190,12 @@ int main()
             while (jugadorVivo == true && victorias < 10)
             {
 
-                int indiceAleatorio = rand() % 10; // Generamos un enemigo
+                int indiceAleatorio = rand() % 20; // Generamos un enemigo
                 Pokemon rivalActual = catalogoEnemigos[indiceAleatorio];
 
                 escalarStats(rivalActual, victorias); // Aumentamos stats por cada combate
 
-                ejecutarBatalla(miPokemon, rivalActual, pociones); // Empieza la batalla
+                ejecutarBatalla(miPokemon, rivalActual, pociones, superPociones); // Empieza la batalla
 
                 if (miPokemon.vidaActual > 0)
                 { // Al terminar la batalla, evaluamos qué pasa:
@@ -209,14 +220,14 @@ int main()
                 cout << "                EL LIDER NOSEPASS TE DESAFIA                " << endl;
                 cout << "============================================================" << endl;
 
-                escalarStats(liderNosepass, 6);
-                ejecutarBatalla(miPokemon, liderNosepass, pociones);
+                escalarStats(liderNosepass, 5);
+                ejecutarBatalla(miPokemon, liderNosepass, pociones, superPociones);
 
                 if (miPokemon.vidaActual > 0)
                 {
-                    cout << "\n¡FELICIDADES! ¡HAS GANADO EL JUEGO!\n"
+                    cout << "\nFELICIDADES, HAS GANADO EL JUEGO!\n"
                          << endl;
-                    actualJefes++;  // Venciste a un jefe en esta sesión
+                    actualJefes++;  // Vencist2e a un jefe en esta sesión
                     totalesJefes++; // Se acumula a tu historial global de jefes derrotados
                 }
             }
@@ -266,7 +277,7 @@ int main()
             {
                 archivoEscritura << totalesVictorias << "\n";
                 archivoEscritura << totalesJefes << "\n";
-                archivoEscritura << actualVictorias << "\n"; // Se guarda para ser "anterior" en el próximo inicio
+                archivoEscritura << actualVictorias << "\n"; // Se guarda para ser la partida anterior en el próximo inicio
                 archivoEscritura << actualJefes << "\n";
                 archivoEscritura.close();
                 cout << "Historial guardado con exito!" << endl;
@@ -306,7 +317,7 @@ int mostrarMenu()
 }
 
 // --- EL ENGRANAJE MENOR (LA BATALLA) ---
-void ejecutarBatalla(Pokemon &jugador, Pokemon &enemigo, int &pociones)
+void ejecutarBatalla(Pokemon &jugador, Pokemon &enemigo, int &pociones, int &superPociones)
 {
     cout << "\n================================================" << endl;
     cout << "     Comienza la pelea contra " << enemigo.nombre << "!" << endl;
@@ -330,7 +341,7 @@ void ejecutarBatalla(Pokemon &jugador, Pokemon &enemigo, int &pociones)
             // --- TURNO 1: JUGADOR ---
             int accion;
             cout << "\n[ PS " << jugador.nombre << ": " << jugador.vidaActual << " | PS " << enemigo.nombre << ": " << enemigo.vidaActual << " ]";
-            cout << "\nTu turno. 1. Atacar | 2. Usar Pocion (" << pociones << " restantes): ";
+            cout << "\nTu turno. 1. Atacar | 2. Abrir Mochila: ";
             cin >> accion;
 
             if (accion == 1)
@@ -386,18 +397,47 @@ void ejecutarBatalla(Pokemon &jugador, Pokemon &enemigo, int &pociones)
             }
             else
             {
-                // Eligió curarse
-                if (pociones > 0)
+                // Eligió curarse: Abrimos la mochila de opciones
+                int tipoCura;
+                cout << "\n--- MOCHILA DE OBJETOS ---" << endl;
+                cout << "1. Pocion (Cura 30 PS) [" << pociones << " restantes]" << endl;
+                cout << "2. Superpocion (Cura 50 PS) [" << superPociones << " restantes]" << endl;
+                cout << "Elige que objeto usar (1-2): ";
+                cin >> tipoCura;
+
+                if (tipoCura == 1)
                 {
-                    jugador.vidaActual += 35;
-                    pociones--;
-                    if (jugador.vidaActual > jugador.vidaMax)
-                        jugador.vidaActual = jugador.vidaMax;
-                    cout << "-> Has usado una pocion! Recuperas 35 PS. Te quedan " << pociones << " pociones." << endl;
+                    if (pociones > 0)
+                    {
+                        jugador.vidaActual += 30; // Cura 30 de vida, para balancear (considerar cambio)
+                        pociones--;
+                        if (jugador.vidaActual > jugador.vidaMax)
+                            jugador.vidaActual = jugador.vidaMax;
+                        cout << "-> ¡Has usado una Pocion! Recuperas 30 PS." << endl;
+                    }
+                    else
+                    {
+                        cout << "-> Oh no! No te quedan Pociones normales. Pierdes el turno buscando en el fondo de la mochila..." << endl;
+                    }
+                }
+                else if (tipoCura == 2)
+                {
+                    if (superPociones > 0)
+                    {
+                        jugador.vidaActual += 50; // Cura 50 se usa para los jefe, o a deccision del jugador
+                        superPociones--;
+                        if (jugador.vidaActual > jugador.vidaMax)
+                            jugador.vidaActual = jugador.vidaMax;
+                        cout << "-> ¡Has usado una Superpocion! Recuperas 50 PS." << endl;
+                    }
+                    else
+                    {
+                        cout << "-> Oh no! No te quedan Superpociones. Pierdes el turno buscando en el fondo de la mochila..." << endl;
+                    }
                 }
                 else
                 {
-                    cout << "-> Oh no! No te quedan pociones. Pierdes el turno buscando en la mochila vacia..." << endl;
+                    cout << "-> Te confundiste de boton al abrir la mochila, entras en panico y pierdes el turno... :(" << endl;
                 }
             }
 
@@ -426,7 +466,7 @@ void ejecutarBatalla(Pokemon &jugador, Pokemon &enemigo, int &pociones)
             // --- TURNO 2: JUGADOR ---
             int accion;
             cout << "\n[ PS " << jugador.nombre << ": " << jugador.vidaActual << " | PS " << enemigo.nombre << ": " << enemigo.vidaActual << " ]";
-            cout << "\nTu turno. 1. Atacar | 2. Usar Pocion (" << pociones << " restantes): ";
+            cout << "\nTu turno. 1. Atacar | 2. Abrir Mochila: ";
             cin >> accion;
 
             if (accion == 1)
@@ -482,17 +522,47 @@ void ejecutarBatalla(Pokemon &jugador, Pokemon &enemigo, int &pociones)
             }
             else
             {
-                if (pociones > 0)
+                // Eligió curarse: Abrimos la mochila de opciones
+                int tipoCura;
+                cout << "\n--- MOCHILA DE OBJETOS ---" << endl;
+                cout << "1. Pocion (Cura 30 PS) [" << pociones << " restantes]" << endl;
+                cout << "2. Superpocion (Cura 50 PS) [" << superPociones << " restantes]" << endl;
+                cout << "Elige que objeto usar (1-2): ";
+                cin >> tipoCura;
+
+                if (tipoCura == 1)
                 {
-                    jugador.vidaActual += 10;
-                    pociones--;
-                    if (jugador.vidaActual > jugador.vidaMax)
-                        jugador.vidaActual = jugador.vidaMax;
-                    cout << "-> Has usado una pocion! Recuperas 35 PS. Te quedan " << pociones << " pociones." << endl;
+                    if (pociones > 0)
+                    {
+                        jugador.vidaActual += 30; // Cura 30 de vida (considerar a cambiar)
+                        pociones--;
+                        if (jugador.vidaActual > jugador.vidaMax)
+                            jugador.vidaActual = jugador.vidaMax;
+                        cout << "-> ¡Has usado una Pocion! Recuperas 30 PS." << endl;
+                    }
+                    else
+                    {
+                        cout << "-> Oh no! No te quedan Pociones normales. Pierdes el turno buscando en el fondo de la mochila..." << endl;
+                    }
+                }
+                else if (tipoCura == 2)
+                {
+                    if (superPociones > 0)
+                    {
+                        jugador.vidaActual += 50; // Cura 50 se usa principalmente para jefes
+                        superPociones--;
+                        if (jugador.vidaActual > jugador.vidaMax)
+                            jugador.vidaActual = jugador.vidaMax;
+                        cout << "-> ¡Has usado una Superpocion! Recuperas 50 PS." << endl;
+                    }
+                    else
+                    {
+                        cout << "-> Oh no! No te quedan Superpociones. Pierdes el turno buscando en el fondo de la mochila..." << endl;
+                    }
                 }
                 else
                 {
-                    cout << "-> Oh no! No te quedan pociones. Pierdes el turno buscando en la mochila vacia..." << endl;
+                    cout << "-> Te confundiste de boton al abrir la mochila, entras en panico y pierdes el turno... :(" << endl;
                 }
             }
         }
