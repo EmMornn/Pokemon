@@ -1,0 +1,4 @@
+Partida 1:
+  - Tantas victorias de ruta: 10
+  - Tantas victorias de jefe: 1
+-----------------------------------------

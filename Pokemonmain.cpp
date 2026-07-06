@@ -5,19 +5,24 @@
 // Importante recordar que para que funcione el archivo donde construi el pokemon no debe tener al final el .cpp
 
 // Lo sacamos de nuestra libreria y lo usamos como una funcion
+//Este sirve para aumentar las stats d enuestro pokemon
 void subirNivel(Pokemon &p) {
 p.vidaMax += 10;
 p.vidaActual = p.vidaMax;
 p.ataque += 5;
 p.defensa += 4;
+p.velocidad += 2;
 };
 
+
+//Este aumenta la stats de los pokemon rivales
 void escalarStats(Pokemon &p, int victorias) {
 p.vidaMax += (victorias * 7); 
 p.vidaActual = p.vidaMax ;
 p.ataque += (victorias * 4);  
 p.defensa += (victorias * 2);
 };
+
 
 int mostrarMenu();
 void ejecutarBatalla(Pokemon &jugador, Pokemon &enemigo, int &pociones);

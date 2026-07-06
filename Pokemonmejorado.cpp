@@ -1,10 +1,10 @@
-#include <iostream>
+#include <iostream>  // Permite usar cout y cin en la consola.
 #include "Pokemon.h" // Aca estoy invocando por decir asi a un archivo que esta dentro de esta misma carpeta en este caso el pokemon.h
-#include <cstdlib>
-#include <ctime>
-#include <chrono>  // controlara el tiempo
-#include <thread>  // permite hacer pausas
-#include <fstream> // lo usaremos para guardar las victorias en un .txt
+#include <cstdlib>   // Lo usamos para el randomizar y limpiar la pantalla
+#include <ctime>     // Lee el reloj del pc para poder crear numeros aleatorios diferentes en cada partido
+#include <chrono>    // controlara el tiempo
+#include <thread>    // permite hacer pausas
+#include <fstream>   // lo usaremos para guardar las victorias en un .txt
 // Importante recordar que para que funcione el archivo donde construi el pokemon.h no debe tener al final el .cpp
 
 using namespace std;
@@ -29,9 +29,9 @@ void escalarStats(Pokemon &p, int victorias)
     p.defensa += (victorias * 2);
 };
 
-// Menu de inicio e interfaz que observa el usuario en cuanto empieza a correr el programa
+// Menu de inicio e interfaz que ve el usuario en cuanto empieza a ejecutarse el programa
 int mostrarMenu()
-{
+{ // Menu de inicio
     int seleccion;
     cout << endl
          << endl;
@@ -48,10 +48,11 @@ int mostrarMenu()
     cin >> seleccion;
     return seleccion;
 }
-// --- EL ENGRANAJE MENOR (LA BATALLA) ---
+
+// Le indicamos a la funcion de ejecutar batalla que usaremos el turno Jugador
 void turnoJugador(Pokemon &jugador, Pokemon &enemigo, int &pociones, int &superPociones);
 void ejecutarBatalla(Pokemon &jugador, Pokemon &enemigo, int &pociones, int &superPociones)
-{
+{ // Este es el bucle de batalla
     cout << "\n===========================================" << endl;
     cout << "     Comienza la pelea contra " << enemigo.nombre << "!" << endl;
     cout << "===========================================\n"
@@ -63,13 +64,13 @@ void ejecutarBatalla(Pokemon &jugador, Pokemon &enemigo, int &pociones, int &sup
 
         if (jugadorVaPrimero)
         {
-            // --- TURNO 1: JUGADOR ---
+            // TURNO 1: Jugador cuando la velocidad del pokemon del usuario es mayor
             turnoJugador(jugador, enemigo, pociones, superPociones);
 
             if (enemigo.vidaActual <= 0)
                 break;
 
-            // --- TURNO 2: ENEMIGO ---
+            // TURNO 2: Contraataca el enemigo
             int danioEnemigo = enemigo.ataque - (jugador.defensa / 2);
             if (danioEnemigo < 1)
                 danioEnemigo = 1;
@@ -78,7 +79,7 @@ void ejecutarBatalla(Pokemon &jugador, Pokemon &enemigo, int &pociones, int &sup
         }
         else
         {
-            // --- TURNO 1: ENEMIGO (Es más rápido) ---
+            // TURNO 1: Enemigo cuando es más rápido
             int danioEnemigo = enemigo.ataque - (jugador.defensa / 2);
             if (danioEnemigo < 1)
                 danioEnemigo = 1;
@@ -88,11 +89,11 @@ void ejecutarBatalla(Pokemon &jugador, Pokemon &enemigo, int &pociones, int &sup
             if (jugador.vidaActual <= 0)
                 break;
 
-            // --- TURNO 2: JUGADOR ---
-            turnoJugador(jugador, enemigo, pociones, superPociones); // <-- ¡LA VOLVEMOS A USAR AQUÍ!
+            // TURNO 2: Jugador
+            turnoJugador(jugador, enemigo, pociones, superPociones);
         }
     }
-
+    // Se muestra un mensaje de victoria o derrota dependiendo el resultado
     if (jugador.vidaActual <= 0)
         cout << "\nHas perdido la batalla...\n";
     else
@@ -101,14 +102,15 @@ void ejecutarBatalla(Pokemon &jugador, Pokemon &enemigo, int &pociones, int &sup
 
 void textoAnimado(string texto, int velocidad)
 {
-    for (char letra : texto)
+    for (char letra : texto) // Bucle basado en rango
     {
         cout << letra;
-        cout.flush();
-        this_thread::sleep_for(chrono::milliseconds(velocidad));
+        cout.flush();                                            // Imprime el caracter en el momento
+        this_thread::sleep_for(chrono::milliseconds(velocidad)); //
     }
 }
 
+// Podremos interactuar en este menu durante la batalla simpre y cuando el turno del jugador no haya terminado
 void turnoJugador(Pokemon &jugador, Pokemon &enemigo, int &pociones, int &superPociones)
 {
     bool turnoTerminado = false;
@@ -169,7 +171,7 @@ void turnoJugador(Pokemon &jugador, Pokemon &enemigo, int &pociones, int &superP
             }
             else
             {
-                cout << "-> Movimiento no reconocido. Perdiste la concentracion." << endl;
+                cout << "-> Movimiento no reconocido. Tu pokemon se confunde." << endl;
             }
             turnoTerminado = true;
         }
@@ -194,12 +196,12 @@ void turnoJugador(Pokemon &jugador, Pokemon &enemigo, int &pociones, int &superP
                     pociones--;
                     if (jugador.vidaActual > jugador.vidaMax)
                         jugador.vidaActual = jugador.vidaMax;
-                    cout << "-> ¡Has usado una Pocion! Recuperas 30 PS." << endl;
+                    cout << " Has usado una Pocion! Recuperas 30 PS." << endl;
                     turnoTerminado = true;
                 }
                 else
                 {
-                    cout << "-> ¡No te quedan Pociones normales!" << endl;
+                    cout << " No te quedan Pociones normales!" << endl;
                 }
             }
             else if (tipoCura == 2)
@@ -210,17 +212,23 @@ void turnoJugador(Pokemon &jugador, Pokemon &enemigo, int &pociones, int &superP
                     superPociones--;
                     if (jugador.vidaActual > jugador.vidaMax)
                         jugador.vidaActual = jugador.vidaMax;
-                    cout << "-> ¡Has usado una Superpocion! Recuperas 50 PS." << endl;
+                    cout << " Has usado una Superpocion! Recuperas 50 PS." << endl;
                     turnoTerminado = true;
                 }
                 else
                 {
-                    cout << "-> ¡No te quedan Superpociones!" << endl;
+                    cout << " No te quedan Superpociones!" << endl;
                 }
+            }
+            else
+            {
+
+                cout << " Te confundiste al abrir la mochila, no encuentras el objeto y pierdes el turno... :(" << endl;
+                turnoTerminado = true; // Se marca como true para que el turno del usuario finalice y el enemigo aproveche y lo ataque
             }
         }
         else if (accion == 3)
-        {
+        { // Si queremos saber las stats para una mejor estrategia acudimos a este menu
             cout << "\n=========================================================" << endl;
             cout << "                    STATS DE COMBATE                      " << endl;
             cout << "=========================================================" << endl;
@@ -231,7 +239,7 @@ void turnoJugador(Pokemon &jugador, Pokemon &enemigo, int &pociones, int &superP
             cout << "    Atk: " << enemigo.ataque << " | Def: " << enemigo.defensa << " | Vel: " << enemigo.velocidad << endl;
             cout << "=========================================================\n"
                  << endl;
-            std::system("pause");
+            std::system("pause"); // Se pausa el programa
         }
         else
         {
@@ -246,17 +254,18 @@ int main()
 
     srand(time(0));
 
-    // -- VARIABLES O VICTORIAS QUE GUARDAMOS GLOBALMENTE --
+    // Variables que se guardan globalmente para el historial
     int totalesVictorias = 0;
     int totalesJefes = 0;
     int anteriorVictorias = 0;
     int anteriorJefes = 0;
+    int totalPartidas = 0;
 
-    // -- VARIABLES DE LA SESIÓN ACTUAL --
+    // Variables de la sesion actual que se guardan en el historial
     int actualVictorias = 0;
     int actualJefes = 0;
 
-    // -- CONTROL Y RESET DE PARTIDA --
+    // Al volver a jugar una partida dentro de la misma sesion queremos que se reinicien las stats de victorias, los objetos y la condicicon si esta vivo
     int victorias = 0;       // Iniciamos las victorias en 0 pero despues aumentan
     bool jugadorVivo = true; // Esto nos sirve para cuando estemos en el bucle de batalla y perdamos, cambiara a falso y termina el bucle
     int pociones = 15;       // Tambien tenemos cura y declaramos que inicialmente empiezan con 15, o podemos cambiarlo luego
@@ -272,6 +281,7 @@ int main()
         archivoLectura >> totalesJefes;
         archivoLectura >> anteriorVictorias;
         archivoLectura >> anteriorJefes;
+        archivoLectura >> totalPartidas;
         archivoLectura.close();
     }
 
@@ -310,14 +320,14 @@ int main()
 
         // TIER 5: (PRE-JEFE)
         {"Shroomish", "Planta", 65, 65, 16, 15, 15},
-        {"Aron", "Acero", 70, 70, 18, 26, 9},
+        {"Aron", "Acero", 70, 70, 18, 26, 10},
         {"Slakoth", "Normal", 70, 70, 22, 16, 10},
-        {"Machop", "Lucha", 80, 80, 17, 17, 11}};
+        {"Machop", "Lucha", 80, 80, 20, 17, 11}};
 
     Pokemon catalogoJefes1[3] = {
         {"Nosepass", "Roca", 150, 150, 33, 35, 30},
         {"Makuhita", "Lucha", 165, 165, 35, 37, 27},
-        {"Magnemite", "Electrico", 145, 145, 36, 32, 45}};
+        {"Magnemite", "Electrico", 145, 145, 35, 32, 35}};
     // Proximo a ampliar para ser mas variada y emocionante la aventura (piensen ideas porfa)
 
     /* Esto es para comprobar que los datos sean correctos, el pokemon.nombre esta declaradoen pokemon.h en la parte
@@ -486,7 +496,13 @@ int main()
             cout << endl;
             cout << "Guardando historial en la tarjeta de memoria..." << endl;
 
-            // --- ESCRITURA EN EL ARCHIVO ---
+            // Si hubo actividad en esta tanda, sumamos una partida al contador
+            if (actualVictorias > 0 || actualJefes > 0)
+            {
+                totalPartidas++;
+            }
+
+            // 1. TU GUARDADO CLÁSICO (El que lee el programa por dentro)
             ofstream archivoEscritura("guardado.txt");
             if (archivoEscritura.is_open())
             {
@@ -494,12 +510,28 @@ int main()
                 archivoEscritura << totalesJefes << "\n";
                 archivoEscritura << actualVictorias << "\n"; // Se guarda para ser la partida anterior en el próximo inicio
                 archivoEscritura << actualJefes << "\n";
+                archivoEscritura << totalPartidas << "\n";
                 archivoEscritura.close();
                 cout << "Historial guardado con exito!" << endl;
             }
 
+            // Solo se escribe en la registro si el usuario realmente jugó en esta sesión
+            if (actualVictorias > 0 || actualJefes > 0)
+            {
+                ofstream archivoRegistro("registro_historico.txt", ios::app); // 'ios::app' viaja al final del archivo sin borrar nada
+                if (archivoRegistro.is_open())
+                {
+                    archivoRegistro << "Partida " << totalPartidas << ":\n";
+                    archivoRegistro << "  - Victorias de ruta: " << actualVictorias << "\n";
+                    archivoRegistro << "  - Victorias de jefe: " << actualJefes << "\n";
+                    archivoRegistro << "-----------------------------------------\n";
+                    archivoRegistro.close();
+                }
+            }
+
             cout << "Cerrando el juego..." << endl
                  << endl;
+            break;
         }
         break;
         default:
