@@ -6,6 +6,7 @@
 #include <thread>    // permite hacer pausas
 #include <fstream>   // lo usaremos para guardar las victorias en un .txt
 // Importante recordar que para que funcione el archivo donde construi el pokemon.h no debe tener al final el .cpp
+// Aclarar que los menu fueron creados a partir de investigar los simbolos que visual podia leer usando el comando: std::system("chcp 65001 > nul");
 
 using namespace std;
 
@@ -17,6 +18,7 @@ void subirNivel(Pokemon &p)
     p.vidaActual = p.vidaMax;
     p.ataque += 5;
     p.defensa += 4;
+    p.velocidad += 2;
 };
 
 // La sacamos tambien de la libreria que creamos con el proposito de subir las estadisticas
@@ -35,17 +37,24 @@ int mostrarMenu()
     int seleccion;
     cout << endl
          << endl;
-    cout << "===============================================================" << endl;
-    cout << "                    AVENTURA POKEMON FDP C1                    " << endl;
-    cout << "===============================================================" << endl;
-    cout << endl;
-    cout << "1. JUGAR" << endl;
-    cout << "2. HISTORIAL DE VICTORIAS" << endl;
-    cout << "3. CREDITOS Y AGRADECIMIENTOS" << endl;
-    cout << "4. SALIR " << endl;
-    cout << " Selecciona una opcion: ";
-
+    cout << "╔════════════════════════════════════════════╗" << endl;
+    cout << "║          AVENTURA POKEMON FDP 1            ║" << endl;
+    cout << "╠════════════════════════════════════════════╣" << endl;
+    cout << "║                                            ║" << endl;
+    cout << "║   1.    Iniciar Nueva Aventura             ║" << endl;
+    cout << "║   2.    Consultar Historial de Récords     ║" << endl;
+    cout << "║   3.    Créditos del Desarrollador         ║" << endl;
+    cout << "║   4.    Guardar y Salir del Juego          ║" << endl;
+    cout << "║                                            ║" << endl;
+    cout << "╚════════════════════════════════════════════╝" << endl;
+    cout << " Selecciona un comando de la cabina (1-4): ";
     cin >> seleccion;
+    if (cin.fail())
+    {
+        cin.clear();             //  Calma el error de la consola
+        cin.ignore(10000, '\n'); // 2. Tira la letra o símbolo a la basura
+        return -1;               // 3. Devuelve un número falso para que el switch repita el ciclo limpio
+    }
     return seleccion;
 }
 
@@ -117,26 +126,44 @@ void turnoJugador(Pokemon &jugador, Pokemon &enemigo, int &pociones, int &superP
     while (turnoTerminado == false)
     {
         int accion;
-        cout << "\n[ PS " << jugador.nombre << ": " << jugador.vidaActual << " | PS " << enemigo.nombre << ": " << enemigo.vidaActual << " ]";
-        cout << "\nTu turno. 1. Atacar | 2. Abrir Mochila | 3. Ver Info Pokemon: ";
+        cout << "┌─────────────────────────────────────────────────" << endl;
+        cout << "│" << jugador.nombre << " [PS: " << jugador.vidaActual << "/" << jugador.vidaMax << "] vs " << enemigo.nombre << " [PS: " << enemigo.vidaActual << "/" << enemigo.vidaMax << "] " << endl;
+        cout << "└─────────────────────────────────────────────────" << endl;
+        cout << "Tu turno. 1. Atacar | 2. Abrir Mochila | 3. Ver Info Pokémon: ";
         cin >> accion;
-
+        if (cin.fail())
+        {
+            cout << "Error: Ingresa un numero valido, no letras." << endl;
+            cin.clear();             // 1. Calma el error de la consola
+            cin.ignore(10000, '\n'); // 2. Tira la letra o símbolo a la basura
+            accion = 0;              // 3. Le damos un valor apropiado a la accion
+        }
         if (accion == 1)
         {
             int mov;
-            cout << "\n--- MOVIMIENTOS ---" << endl;
-            cout << "1. Aranazo (Danio normal)" << endl;
+            cout << "\n┌────────────────────────────────────────┐" << endl;
+            cout << "│          PANEL DE MOVIMIENTOS          │" << endl;
+            cout << "├────────────────────────────────────────┤" << endl;
+            cout << "│ 1. Arañazo (Daño físico básico)        │" << endl;
             if (jugador.tipo == "Fuego")
-                cout << "2. Ascuas (Ataque Especial)" << endl;
+                cout << "│ 2. Ascuas (Ataque Especial Tipo Fuego) │" << endl;
             else if (jugador.tipo == "Agua")
-                cout << "2. Pistola Agua (Ataque Especial)" << endl;
+                cout << "│ 2. Pistola Agua (At. Especial Agua)    │" << endl;
             else
-                cout << "2. Hoja Afilada (Ataque Especial)" << endl;
-            cout << "3. Grunido (Bajar Defensa rival)" << endl;
-            cout << "4. Afilagarras (Subir tu Ataque)" << endl;
-            cout << "5. <- REGRESAR AL MENU ANTERIOR" << endl;
+                cout << "│ 2. Hoja Afilada (At. Especial Planta)  │" << endl;
+            cout << "│ 3. Gruñido (Bajar Defensa rival)       │" << endl;
+            cout << "│ 4. Afilagarras (Subir tu Ataque)       │" << endl;
+            cout << "│ 5. <- REGRESAR AL MENÚ ANTERIOR        │" << endl;
+            cout << "└────────────────────────────────────────┘" << endl;
             cout << "Elige un movimiento (1-5): ";
             cin >> mov;
+            if (cin.fail())
+            {
+                cout << "Error: Ingresa un numero valido, no letras." << endl;
+                cin.clear();             // 1. Calma el error de la consola
+                cin.ignore(10000, '\n'); // 2. Tira la letra o símbolo a la basura
+                mov = 0;                 // 3. Le damos un valor apropiado a el movimiento
+            }
             cout << endl;
             if (mov == 5)
                 continue;
@@ -147,7 +174,7 @@ void turnoJugador(Pokemon &jugador, Pokemon &enemigo, int &pociones, int &superP
                 if (danio < 1)
                     danio = 1;
                 enemigo.vidaActual -= danio;
-                cout << "-> " << jugador.nombre << " usa Aranazo y causa " << danio << " de danio!" << endl;
+                cout << "-> " << jugador.nombre << " usa Arañazo y causa " << danio << " de daño!" << endl;
             }
             else if (mov == 2)
             {
@@ -155,14 +182,14 @@ void turnoJugador(Pokemon &jugador, Pokemon &enemigo, int &pociones, int &superP
                 if (danio < 1)
                     danio = 1;
                 enemigo.vidaActual -= danio;
-                cout << "-> " << jugador.nombre << " usa su Ataque Especial y causa " << danio << " de danio!" << endl;
+                cout << "-> " << jugador.nombre << " usa su Ataque Especial y causa " << danio << " de daño!" << endl;
             }
             else if (mov == 3)
             {
                 enemigo.defensa -= 2;
                 if (enemigo.defensa < 1)
                     enemigo.defensa = 1;
-                cout << "-> " << jugador.nombre << " usa Grunido! La defensa del rival ha bajado." << endl;
+                cout << "-> " << jugador.nombre << " usa Gruñido! La defensa del rival ha bajado." << endl;
             }
             else if (mov == 4)
             {
@@ -178,12 +205,22 @@ void turnoJugador(Pokemon &jugador, Pokemon &enemigo, int &pociones, int &superP
         else if (accion == 2)
         {
             int tipoCura;
-            cout << "\n--- MOCHILA DE OBJETOS ---" << endl;
-            cout << "1. Pocion (Cura 30 PS) [" << pociones << " restantes]" << endl;
-            cout << "2. Superpocion (Cura 50 PS) [" << superPociones << " restantes]" << endl;
-            cout << "3. <- REGRESAR AL MENU ANTERIOR" << endl;
-            cout << "Elige que objeto usar (1-3): ";
+            cout << "\n┌────────────────────────────────────────┐" << endl;
+            cout << "│           MOCHILA DE OBJETOS           │" << endl;
+            cout << "├────────────────────────────────────────┤" << endl;
+            cout << "│ 1. Poción (Recupera 30 PS)     [" << pociones << "]    │" << endl;
+            cout << "│ 2. Superpoción (Recupera 50 PS)[" << superPociones << "]     │" << endl;
+            cout << "│ 3. <- REGRESAR AL MENÚ ANTERIOR        │" << endl;
+            cout << "└────────────────────────────────────────┘" << endl;
+            cout << "Elige qué objeto usar (1-3): ";
             cin >> tipoCura;
+            if (cin.fail())
+            {
+                cout << "Error: Ingresa un numero valido, no letras." << endl;
+                cin.clear();             // 1. Calma el error de la consola
+                cin.ignore(10000, '\n'); // 2. Tira la letra o símbolo a la basura
+                tipoCura = 0;            // 3. Le damos un valor apropiado a la cura
+            }
 
             if (tipoCura == 3)
                 continue;
@@ -229,15 +266,15 @@ void turnoJugador(Pokemon &jugador, Pokemon &enemigo, int &pociones, int &superP
         }
         else if (accion == 3)
         { // Si queremos saber las stats para una mejor estrategia acudimos a este menu
-            cout << "\n=========================================================" << endl;
-            cout << "                    STATS DE COMBATE                      " << endl;
-            cout << "=========================================================" << endl;
-            cout << " " << jugador.nombre << " (Tu) -> Tipo: " << jugador.tipo << " | PS: " << jugador.vidaActual << "/" << jugador.vidaMax << endl;
-            cout << "    Atk: " << jugador.ataque << " | Def: " << jugador.defensa << " | Vel: " << jugador.velocidad << endl;
-            cout << "---------------------------------------------------------" << endl;
-            cout << " " << enemigo.nombre << " (Rival) -> Tipo: " << enemigo.tipo << " | PS: " << enemigo.vidaActual << "/" << enemigo.vidaMax << endl;
-            cout << "    Atk: " << enemigo.ataque << " | Def: " << enemigo.defensa << " | Vel: " << enemigo.velocidad << endl;
-            cout << "=========================================================\n"
+            cout << "╔═════════════════════════════════════════════════════╗" << endl;
+            cout << "║                STATS DE COMBATE                     ║" << endl;
+            cout << "╠═════════════════════════════════════════════════════╣" << endl;
+            cout << "║  ► " << jugador.nombre << " (Tú)  - Tipo: " << jugador.tipo << endl;
+            cout << "║    PS: " << jugador.vidaActual << "/" << jugador.vidaMax << "  │ Atk: " << jugador.ataque << " │ Def: " << jugador.defensa << " │ Vel: " << jugador.velocidad << "          ║" << endl;
+            cout << "║ ─────────────────────────────────────────────────── ║" << endl;
+            cout << "║  ► " << enemigo.nombre << " (Rival) - Tipo: " << enemigo.tipo << endl;
+            cout << "║    PS: " << enemigo.vidaActual << "/" << enemigo.vidaMax << "  │ Atk: " << enemigo.ataque << " │ Def: " << enemigo.defensa << " │ Vel: " << enemigo.velocidad << "          ║" << endl;
+            cout << "╚═════════════════════════════════════════════════════╝"
                  << endl;
             std::system("pause"); // Se pausa el programa
         }
@@ -251,6 +288,7 @@ void turnoJugador(Pokemon &jugador, Pokemon &enemigo, int &pociones, int &superP
 }
 int main()
 {
+    std::system("chcp 65001 > nul");
 
     srand(time(0));
 
@@ -376,15 +414,31 @@ int main()
             textoAnimado(" x?: Mi nombre es Profesor Guayaba, veo que estas interesado en una aventura!\n\n", 50);
             this_thread::sleep_for(chrono::seconds(1));
 
+            textoAnimado(" Prof Guayaba: Acompañame a mi Laboratorio, te mostrare algo...\n", 40);
+            textoAnimado(" Acompañas a este -profesor- que acabas de conocer... \n\n", 50);
+            this_thread::sleep_for(chrono::seconds(1));
+
             int seleccionInicial;
 
-            cout << "El profesor Guayaba te ofrece a tu companero de Aventura!" << endl;
-            cout << "Selecciona uno de los pokemon iniciales. A quien eliges?: " << endl;
-            cout << "1. Treeko (Planta)" << endl;
-            cout << "2. Mudkip (Agua)" << endl;
-            cout << "3. Torchic (Fuego)" << endl; // La verdad esta es la mejor eleccion de las 3. Atte: Emiliano
-            cout << "Pokemon: ";
+            cout << "╔══════════════════════════════════════════════════════╗" << endl;
+            cout << "║            LABORATORIO DEL PROF. GUAYABA             ║" << endl;
+            cout << "╠══════════════════════════════════════════════════════╣" << endl;
+            cout << "║ El profesor Guayaba te ofrece a tu compañero de      ║" << endl;
+            cout << "║ aventura! Selecciona uno de los Pokémon iniciales:   ║" << endl;
+            cout << "║                                                      ║" << endl;
+            cout << "║  1. Treeko  - Tipo: Planta                           ║" << endl;
+            cout << "║  2. Mudkip  - Tipo: Agua                             ║" << endl;
+            cout << "║  3. Torchic - Tipo: Fuego                            ║" << endl;
+            cout << "╚══════════════════════════════════════════════════════╝" << endl;
+            cout << " ¿A quién eliges? (1-3): ";
             cin >> seleccionInicial;
+            if (cin.fail())
+            {
+                cout << "Error: No sabemos porque escoges letras." << endl;
+                cin.clear();             // 1. Calma el error de la consola
+                cin.ignore(10000, '\n'); // 2. Tira la letra o símbolo a la basura
+                seleccionInicial = 0;    // 3. Le damos un valor apropiado a la seleccion de incial
+            }
             cout << endl;
 
             if (seleccionInicial == 1)
@@ -460,43 +514,56 @@ int main()
 
             break;
         case 2:
+            system("cls");
+            cout << "╔═══════════════════════════════════════════════════════╗" << endl;
+            cout << "║               RÉCORD HISTÓRICO (GLOBAL)               ║" << endl;
+            cout << "╚═══════════════════════════════════════════════════════╝" << endl;
+            cout << "  Total de Pokémon derrotados: " << totalesVictorias << endl;
+            cout << "  Total de Jefes superados:    " << totalesJefes << endl;
             cout << endl;
-            cout << "==============================================================" << endl;
-            cout << "               RECORD HISTORICO (GLOBAL)                 " << endl;
-            cout << "==============================================================" << endl;
-            cout << " Total de Pokemon derrotados: " << totalesVictorias << endl;
-            cout << " Total de Jefes superados:    " << totalesJefes << endl;
-            cout << "==============================================================" << endl;
-            cout << "               SESION ANTERIOR                           " << endl;
-            cout << "==============================================================" << endl;
-            cout << " Pokemon derrotados:          " << anteriorVictorias << endl;
-            cout << " Jefes superados:             " << anteriorJefes << endl;
-            cout << "==============================================================" << endl;
-            cout << "               SESION ACTUAL                             " << endl;
-            cout << "==============================================================" << endl;
-            cout << " Pokemon derrotados hoy:      " << actualVictorias << endl;
-            cout << " Jefes superados hoy:         " << actualJefes << endl;
-            cout << "==============================================================\n"
+            cout << "┌───────────────────────────────────────────────────────┐" << endl;
+            cout << "│                    SESIÓN ANTERIOR                    │" << endl;
+            cout << "└───────────────────────────────────────────────────────┘" << endl;
+            cout << "  Pokémon derrotados:          " << anteriorVictorias << endl;
+            cout << "  Jefes superados:             " << anteriorJefes << endl;
+            cout << endl;
+            cout << "┌───────────────────────────────────────────────────────┐" << endl;
+            cout << "│                     SESIÓN ACTUAL                     │" << endl;
+            cout << "└───────────────────────────────────────────────────────┘" << endl;
+            cout << "  Pokémon derrotados hoy:      " << actualVictorias << endl;
+            cout << "  Jefes superados hoy:         " << actualJefes << endl;
+            cout << "─────────────────────────────────────────────────────────"
                  << endl;
             system("pause");
             break;
         case 3:
+            system("cls");
             cout << endl;
-            cout << "Juego creado por:  " << endl;
-            cout << " Emiliano Moran " << endl;
-            cout << " Isai Umana " << endl;
-            cout << " Josue De Paz " << endl;
-            cout << " Amilcar Varela " << endl
-                 << endl;
-            cout << " Agradecimientos especiales a... ti, por probar nuestra primera version del juego! " << endl;
+            cout << "╔═══════════════════════════════════════════════════════╗" << endl;
+            cout << "║               CRÉDITOS DE DESARROLLO                  ║" << endl;
+            cout << "╚═══════════════════════════════════════════════════════╝" << endl;
             cout << endl;
+            cout << "Juego creado por: " << endl;
+            cout << "  ┌──────────────────────────────────────────────┐" << endl;
+            cout << "   • Emiliano Morán" << endl;
+            cout << "   • Isaí Umaña" << endl;
+            cout << "   • Josué De Paz" << endl;
+            cout << "   • Amílcar Varela" << endl;
+            cout << "  └──────────────────────────────────────────────┘" << endl;
+            cout << endl;
+            cout << " ╔═══════════════════════════════════════════════════╗" << endl;
+            cout << " ║ ★ AGRADECIMIENTOS ESPECIALES ★                   ║" << endl;
+            cout << " ║                                                   ║" << endl;
+            cout << " ║ Muchas gracias a ti por jugar y probar nuestra    ║" << endl;
+            cout << " ║ primera versión del juego y proyecto ^^           ║" << endl;
+            cout << " ╚═══════════════════════════════════════════════════╝" << endl;
             break;
         case 4:
         {
             cout << endl;
             cout << "Guardando historial en la tarjeta de memoria..." << endl;
 
-            // Si hubo actividad en esta tanda, sumamos una partida al contador
+            // Si se gano algun combate en esta sesion, se suma una partida al contador
             if (actualVictorias > 0 || actualJefes > 0)
             {
                 totalPartidas++;

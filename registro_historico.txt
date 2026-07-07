@@ -2,3 +2,15 @@ Partida 1:
   - Tantas victorias de ruta: 10
   - Tantas victorias de jefe: 1
 -----------------------------------------
+Partida 2:
+  - Victorias de ruta: 10
+  - Victorias de jefe: 1
+-----------------------------------------
+Partida 3:
+  - Victorias de ruta: 10
+  - Victorias de jefe: 1
+-----------------------------------------
+Partida 4:
+  - Victorias de ruta: 10
+  - Victorias de jefe: 0
+-----------------------------------------
