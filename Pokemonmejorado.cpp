@@ -114,8 +114,8 @@ void textoAnimado(string texto, int velocidad)
     for (char letra : texto) // Bucle basado en rango
     {
         cout << letra;
-        cout.flush();                                            // Imprime el caracter en el momento
-        this_thread::sleep_for(chrono::milliseconds(velocidad)); //
+        cout.flush(); // Imprime el caracter en el momento
+        std::this_thread::sleep_for(std::chrono::milliseconds(velocidad));
     }
 }
 
@@ -129,7 +129,7 @@ void turnoJugador(Pokemon &jugador, Pokemon &enemigo, int &pociones, int &superP
         cout << "┌─────────────────────────────────────────────────" << endl;
         cout << "│" << jugador.nombre << " [PS: " << jugador.vidaActual << "/" << jugador.vidaMax << "] vs " << enemigo.nombre << " [PS: " << enemigo.vidaActual << "/" << enemigo.vidaMax << "] " << endl;
         cout << "└─────────────────────────────────────────────────" << endl;
-        cout << "Tu turno. 1. Atacar | 2. Abrir Mochila | 3. Ver Info Pokémon: ";
+        cout << "Tu turno. 1. Atacar | 2. Abrir Mochila | 3.Ver Info Pokémon: ";
         cin >> accion;
         if (cin.fail())
         {
@@ -205,7 +205,7 @@ void turnoJugador(Pokemon &jugador, Pokemon &enemigo, int &pociones, int &superP
         else if (accion == 2)
         {
             int tipoCura;
-            cout << "\n┌────────────────────────────────────────┐" << endl;
+            cout << "┌────────────────────────────────────────┐" << endl;
             cout << "│           MOCHILA DE OBJETOS           │" << endl;
             cout << "├────────────────────────────────────────┤" << endl;
             cout << "│ 1. Poción (Recupera 30 PS)     [" << pociones << "]    │" << endl;
@@ -323,7 +323,7 @@ int main()
         archivoLectura.close();
     }
 
-    Pokemon torchic = {"Torchic", "Fuego", 60, 60, 17, 10, 15};
+    Pokemon torchic = {"Torchic", "Fuego", 60, 60, 17, 10, 15}; // La verdad esta es la mejor eleccion de las 3. Atte: Emiliano
     Pokemon treecko = {"Treecko", "Planta", 60, 60, 14, 12, 20};
     Pokemon mudkip = {"Mudkip", "Agua", 65, 65, 15, 15, 10};
 
@@ -429,7 +429,7 @@ int main()
             cout << "║  1. Treeko  - Tipo: Planta                           ║" << endl;
             cout << "║  2. Mudkip  - Tipo: Agua                             ║" << endl;
             cout << "║  3. Torchic - Tipo: Fuego                            ║" << endl;
-            cout << "╚══════════════════════════════════════════════════════╝" << endl;
+            cout << "╚══════════════════════════════════════════════════════╝" << endl; 
             cout << " ¿A quién eliges? (1-3): ";
             cin >> seleccionInicial;
             if (cin.fail())
